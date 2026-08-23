@@ -239,7 +239,6 @@ function renderOrganizationDetail(){
     ['unit-d','데이터사이언스학부·통계학과','114명','데이터 수집·처리·분석과 통계적 추론','신뢰성 검증 · 불확실성 정량화 · 통계학과 공동'],
     ['unit-p','산업공학부','69명','산업·사회 문제 구조화와 프로세스 최적화','산업공학전공 · 산업AI전공'],
     ['unit-x','AX융합학부','17개 연계전공','ADP 공통역량을 산업·사회 현장에 적용','도메인별 AI 전환 교육 · 산학 프로젝트'],
-    ['unit-lg','스마트가전공학과','LG 채용연계 · 30명','스마트가전과 Physical AI를 잇는 계약학과','등록금 전액 · 인턴십 · LG 취업 연계'],
     ...axMajors.map((name,i)=>[`ax-${i+1}`,name,'AX CONVERGENCE PROGRAM']),
     ['edu','AI융합교육원','AI보편교육·확산'],['research','장영실AI융합연구원','전략산업 AX지원'],['infra','AX정보화혁신본부','운영·인프라 지원'],['industry','산학·산업 파트너','INDUSTRY'],
     ['rail-undergrad','학부 연구','UNDERGRADUATE','AI 기초·전공 역량|AX 캡스톤|URP 연구 탐색','PNU AX 1000'],
@@ -247,7 +246,7 @@ function renderOrganizationDetail(){
     ['rail-graduate','대학원 진학','GRADUATE','대학원 교과 선이수|PNU AX 진학브리지|학·석·박 연계|6년 패스트트랙 추진','PNU AX 100'],
     ['rail-advanced','정예연구','ADVANCED RESEARCH','PNU AX 10 정예연구트랙|장영실 AI 펠로우십|국제공동연구|GPU · 클라우드 · 산업데이터 지원','PNU AX 10']
   ];
-  const edges=[['ai','split','stem'],['split','a','core'],['split','d','core'],['split','p','core'],['split','x','core'],['a','unit-a','unit'],['d','unit-d','unit'],['p','unit-p','unit'],['x','unit-x','unit'],['x','unit-lg','special'],...axMajors.map((_,i)=>['unit-x',`ax-${i+1}`,'ax']),['edu','research','ecos-link'],['research','infra','ecos-link'],['rail-undergrad','rail-research','rail'],['rail-research','rail-graduate','rail'],['rail-graduate','rail-advanced','rail']];
+  const edges=[['ai','split','stem'],['split','a','core'],['split','d','core'],['split','p','core'],['split','x','core'],['a','unit-a','unit'],['d','unit-d','unit'],['p','unit-p','unit'],['x','unit-x','unit'],...axMajors.map((_,i)=>['unit-x',`ax-${i+1}`,'ax']),['edu','research','ecos-link'],['research','infra','ecos-link'],['rail-undergrad','rail-research','rail'],['rail-research','rail-graduate','rail'],['rail-graduate','rail-advanced','rail']];
   const headings=[
     ['01 · FOUNDATION','하나의 중심에서,<br>네 개의 축으로.'],['02 · ADP+X','학문을 연결해,<br>실제 조직으로.'],['03 · AX CONVERGENCE','17개 AX 융합·연계전공'],['04 · PNU-APEX','배우고, 연구하고,<br>실행합니다.'],['05 · GROWTH RAIL','학부에서 정예연구까지,<br>하나의 성장 레일로.']
   ];
@@ -260,13 +259,13 @@ function initOrganizationContinuum(){
   const root=document.querySelector('.org-continuum');if(!root)return;
   const stage=root.querySelector('.org-graph-sticky'),steps=[...root.querySelectorAll('[data-org-step]')],nodes=[...root.querySelectorAll('.org-node')],paths=[...root.querySelectorAll('[data-edge]')],headings=[...root.querySelectorAll('[data-org-heading]')],nav=[...root.querySelectorAll('[data-org-go]')],supports=[...root.querySelectorAll('[data-support]')],railTrack=root.querySelector('.growth-rail-track'),railProgress=root.querySelector('.growth-rail-progress'),railPoint=root.querySelector('.growth-rail-point'),growthFinal=root.querySelector('.growth-final'),growthNext=root.querySelector('.growth-next');
   const clamp=value=>Math.max(0,Math.min(1,value)),mix=(a,b,t)=>a+(b-a)*t;
-  const axes=['a','d','p','x'],units=['unit-a','unit-d','unit-p','unit-x','unit-lg'],ecos=['edu','research','infra','industry'],rails=['rail-undergrad','rail-research','rail-graduate','rail-advanced'];
+  const axes=['a','d','p','x'],units=['unit-a','unit-d','unit-p','unit-x'],ecos=['edu','research','infra','industry'],rails=['rail-undergrad','rail-research','rail-graduate','rail-advanced'];
   function state(id,s){
     const hidden={x:50,y:66,o:0,z:.65};let i;
     if(id==='ai')return [ {x:50,y:48,o:1,z:1.1},{x:50,y:42,o:1,z:.94},{x:18,y:32,o:0,z:.66},{x:50,y:58,o:0,z:.7},{x:8,y:66,o:0,z:.65} ][s];
     if(id==='split')return [{x:50,y:61,o:0,z:.1},{x:50,y:54,o:1,z:.1},{x:50,y:51,o:0,z:.1},{x:50,y:59,o:0,z:.1},hidden][s];
     if((i=axes.indexOf(id))>=0)return [ {x:50,y:61,o:0,z:.55},{x:18+i*21.3,y:60,o:1,z:.84},{x:id==='x'?50:18+i*7,y:id==='x'?43:70,o:id==='x'?.12:0,z:id==='x'?.82:.58},{x:32+i*12,y:76,o:0,z:.7},hidden ][s];
-    if((i=units.indexOf(id))>=0){const unitX=[12,31,50,69,88][i],isAx=id==='unit-x',mobile=innerWidth<=720;return [hidden,{x:unitX,y:80,o:1,z:.92},{x:isAx?50:18+i*10,y:isAx?(mobile?37:40):80,o:isAx?1:0,z:isAx?1:.6},{x:27+i*11.5,y:84,o:0,z:.54},hidden][s];}
+    if((i=units.indexOf(id))>=0){const unitX=[12,37,63,88][i],isAx=id==='unit-x',mobile=innerWidth<=720;return [hidden,{x:unitX,y:80,o:1,z:.92},{x:isAx?50:18+i*10,y:isAx?(mobile?37:40):80,o:isAx?1:0,z:isAx?1:.6},{x:27+i*11.5,y:84,o:0,z:.54},hidden][s];}
     if(id.startsWith('ax-')){i=Number(id.slice(3))-1;const mobile=innerWidth<=720,row=Math.floor(i/(mobile?2:6)),col=i%(mobile?2:6),rowCount=mobile?2:(row===2?5:6),startX=mobile?27:(row===0?18:row===1?21:26),stepX=mobile?46:(row===0?12.8:12),gridX=startX+col*stepX,gridY=mobile?51+row*5.4:60+row*11;return [hidden,hidden,{x:gridX,y:gridY,o:1,z:mobile?.82:.9},hidden,hidden][s];}
     if((i=ecos.indexOf(id))>=0){const pos=[[29,50],[50,50],[71,50],[50,73]][i];return [hidden,hidden,hidden,{x:pos[0],y:pos[1],o:i<3?1:0,z:i<3?1:.7},hidden][s];}
     if((i=rails.indexOf(id))>=0)return [hidden,hidden,hidden,hidden,{x:17+i*22,y:[76,72,76,71][i],o:1,z:.88}][s];
@@ -461,12 +460,20 @@ function toggleNavigationOnScroll(){
 }
 addEventListener('scroll',toggleNavigationOnScroll,{passive:true});
 
+function parseDetailHash(){
+  const hash=location.hash.match(/^#detail-(d+)-(d+)$/);
+  if(!hash) return null;
+  const categoryIndex=Number(hash[1])-1,subIndex=Number(hash[2])-1;
+  const section=sections[categoryIndex];
+  if(!section||subIndex<0||subIndex>=section.subs.length) return null;
+  return {categoryIndex,subIndex};
+}
 function renderFromLocation(){
-  const hash=location.hash.match(/^#detail-(\d+)-(\d+)$/);
-  if(hash) showDetail(Number(hash[1])-1,Number(hash[2])-1,false);
+  const target=parseDetailHash();
+  if(target) showDetail(target.categoryIndex,target.subIndex,false);
   else showIndex(false);
 }
 addEventListener('popstate',renderFromLocation);
-const initialHash=location.hash.match(/^#detail-(\d+)-(\d+)$/);
-if(initialHash) showDetail(Number(initialHash[1])-1,Number(initialHash[2])-1,false);
+const initialTarget=parseDetailHash();
+if(initialTarget) showDetail(initialTarget.categoryIndex,initialTarget.subIndex,false);
 else history.replaceState({view:'index'},'',location.hash||'#index');
