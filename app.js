@@ -333,14 +333,20 @@ const dim=document.querySelector('.video-dim');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 const mobileVideo=matchMedia('(max-width: 720px), (pointer: coarse)');
 const SCRUB_DURATION=8;
+const SCRUB_HOLD=7;            // 인트로가 멈추는 지점(네트워크 메시 프레임)
+const INTRO_MS=2500;           // 자동재생 길이
+const INTRO_DEADLINE_MS=3500;  // 영상이 늦으면 이 시점에 항목 강제 노출
 let scrubRaf=0;
 let targetTime=0;
 let seekPending=false;
 let videoReady=false;
-let indexRevealed=false;
 let objectUrl='';
 let videoAborter=null;
 let loadedMobile=null;
+let introDone=false;
+let introRaf=0;
+let introStartedAt=0;
+let introDeadline=0;
 
 function scrubProgress(){
   const rect=intro.getBoundingClientRect();
@@ -348,19 +354,26 @@ function scrubProgress(){
   return Math.max(0,Math.min(1,-rect.top/range));
 }
 
-function updateHeroLayers(progress){
-  indexRevealed=true;
-  const reveal=indexRevealed?1:0;
-  dim.style.opacity=indexRevealed?'.25':'0';
+function videoDuration(){
+  return Number.isFinite(video.duration)?Math.max(0,video.duration-.01):SCRUB_DURATION;
+}
+
+function updateHeroLayers(){
+  const reveal=introDone?1:0;
+  dim.style.opacity=introDone?'.25':'0';
   index.style.opacity=String(reveal);
   index.style.transform=`translateY(${(1-reveal)*28}px)`;
-  index.classList.toggle('ready',indexRevealed);
+  index.classList.toggle('ready',introDone);
+}
+
+function scrubTime(){
+  const duration=videoDuration(),from=Math.min(SCRUB_HOLD,duration);
+  return from+scrubProgress()*Math.max(0,duration-from);
 }
 
 function commitLatestSeek(){
-  if(!videoReady)return;
-  const duration=Number.isFinite(video.duration)?Math.min(SCRUB_DURATION,Math.max(0,video.duration-.01)):SCRUB_DURATION;
-  targetTime=scrubProgress()*duration;
+  if(!videoReady||!introDone)return;
+  targetTime=scrubTime();
   if(video.seeking){seekPending=true;return;}
   if(Math.abs(video.currentTime-targetTime)>.012)video.currentTime=targetTime;
 }
@@ -368,13 +381,43 @@ function commitLatestSeek(){
 function flushScrub(){
   scrubRaf=0;
   if(intro.hidden)return;
-  const progress=scrubProgress();
-  updateHeroLayers(progress);
-  targetTime=progress*SCRUB_DURATION;
+  updateHeroLayers();
   commitLatestSeek();
 }
 
 function scheduleScrub(){if(!scrubRaf)scrubRaf=requestAnimationFrame(flushScrub);}
+
+function endIntro(){
+  if(introDone)return;
+  introDone=true;
+  if(introRaf){cancelAnimationFrame(introRaf);introRaf=0;}
+  if(introDeadline){clearTimeout(introDeadline);introDeadline=0;}
+  updateHeroLayers();
+  scheduleScrub();
+}
+
+function stepIntro(now){
+  introRaf=0;
+  if(introDone)return;
+  const t=Math.min(1,(now-introStartedAt)/INTRO_MS),eased=1-Math.pow(1-t,3);
+  const to=Math.min(SCRUB_HOLD,videoDuration());
+  if(videoReady&&!video.seeking){
+    const want=eased*to;
+    if(Math.abs(video.currentTime-want)>.012)video.currentTime=want;
+  }
+  if(t>=1){endIntro();return;}
+  introRaf=requestAnimationFrame(stepIntro);
+}
+
+function startIntro(){
+  if(introDone||introRaf)return;
+  if(reducedMotion.matches){
+    if(videoReady)video.currentTime=Math.min(SCRUB_HOLD,videoDuration());
+    endIntro();return;
+  }
+  introStartedAt=performance.now();
+  introRaf=requestAnimationFrame(stepIntro);
+}
 
 function revealVideo(){
   video.classList.add('is-ready');
@@ -420,19 +463,22 @@ async function loadScrubVideo(){
 
 video.addEventListener('loadeddata',()=>{
   videoReady=true;
-  targetTime=scrubProgress()*Math.min(SCRUB_DURATION,Math.max(0,video.duration-.01));
-  if(Math.abs(video.currentTime-targetTime)>.012)video.currentTime=targetTime;
-  else revealVideo();
+  revealVideo();
+  if(introDone){
+    targetTime=scrubTime();
+    if(Math.abs(video.currentTime-targetTime)>.012)video.currentTime=targetTime;
+  }else startIntro();
 });
 video.addEventListener('seeked',()=>{
   if(!video.classList.contains('is-ready'))revealVideo();
-  if(seekPending||Math.abs(video.currentTime-targetTime)>.012){
+  if(introDone&&(seekPending||Math.abs(video.currentTime-targetTime)>.012)){
     seekPending=false;
     commitLatestSeek();
   }
 });
 video.addEventListener('error',()=>{videoReady=false;poster.classList.remove('is-hidden');});
-addEventListener('scroll',scheduleScrub,{passive:true});
+function onScrubScroll(){ if(!introDone&&scrollY>4) endIntro(); scheduleScrub(); }
+addEventListener('scroll',onScrubScroll,{passive:true});
 addEventListener('resize',scheduleScrub,{passive:true});
 mobileVideo.addEventListener('change',loadScrubVideo);
 reducedMotion.addEventListener('change',loadScrubVideo);
@@ -440,7 +486,9 @@ function cleanupScrub(){
   videoAborter?.abort();
   if(scrubRaf)cancelAnimationFrame(scrubRaf);
   if(objectUrl)URL.revokeObjectURL(objectUrl);
-  removeEventListener('scroll',scheduleScrub);
+  if(introRaf)cancelAnimationFrame(introRaf);
+  if(introDeadline)clearTimeout(introDeadline);
+  removeEventListener('scroll',onScrubScroll);
   removeEventListener('resize',scheduleScrub);
   mobileVideo.removeEventListener('change',loadScrubVideo);
   reducedMotion.removeEventListener('change',loadScrubVideo);
@@ -448,6 +496,7 @@ function cleanupScrub(){
 addEventListener('pagehide',event=>{ if(!event.persisted) cleanupScrub(); });
 loadScrubVideo();
 scheduleScrub();
+introDeadline=setTimeout(endIntro,INTRO_DEADLINE_MS);
 
 let lastScrollY=window.scrollY;
 function toggleNavigationOnScroll(){
