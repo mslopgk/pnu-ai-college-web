@@ -46,7 +46,7 @@ body.detail-mode.nav-hidden .detail-nav { transform:translateY(-110%); }
 .eyebrow { margin:0 0 18px; font-size:13px; font-weight:700; letter-spacing:.16em; opacity:.72; }
 .index-heading h1 { margin:0; font-size:clamp(34px,3.4vw,50px); line-height:1.2; letter-spacing:-.045em; }
 .mobile-break { display:none; }
-.index-overlay { position:absolute; z-index:5; inset:76px 0 0; color:#fff; padding:clamp(42px,7vh,72px) var(--gutter) 22px; display:flex; flex-direction:column; justify-content:space-between; opacity:0; visibility:hidden; transform:translateY(28px); pointer-events:none; }
+.index-overlay { position:absolute; z-index:5; inset:76px 0 0; color:#fff; padding:clamp(42px,7vh,72px) var(--gutter) 22px; display:flex; flex-direction:column; justify-content:space-between; opacity:0; visibility:hidden; transform:translateY(28px); pointer-events:none; transition:opacity .45s ease,transform .45s ease; }
 .index-overlay.ready { visibility:visible; pointer-events:auto; }
 .index-overlay.ready { text-shadow:0 2px 18px rgba(0,24,58,.28); }
 .index-inner { width:min(520px,100%); }

@@ -349,7 +349,7 @@ function scrubProgress(){
 }
 
 function updateHeroLayers(progress){
-  if(progress>=4/SCRUB_DURATION)indexRevealed=true;
+  indexRevealed=true;
   const reveal=indexRevealed?1:0;
   dim.style.opacity=indexRevealed?'.25':'0';
   index.style.opacity=String(reveal);
