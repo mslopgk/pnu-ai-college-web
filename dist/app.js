@@ -341,7 +341,6 @@ let targetTime=0;
 let seekPending=false;
 let videoReady=false;
 let loadedMobile=null;
-let objectUrl='';
 let introDone=false;
 let introRaf=0;
 let introStartedAt=0;
@@ -423,18 +422,10 @@ function revealVideo(){
   poster.classList.add('is-hidden');
 }
 
-function applyVideoSource(url,isBlob){
-  if(objectUrl&&objectUrl!==url){URL.revokeObjectURL(objectUrl);objectUrl='';}
-  if(isBlob)objectUrl=url;
-  video.src=url;
-  video.load();
-}
-
-async function loadScrubVideo(){
+function loadScrubVideo(){
   const VIDEO_SRC='./assets/higgsfield-pnu-particles.mp4';
   const POSTER_SRC='./assets/higgsfield-pnu-poster.webp';
   if(reducedMotion.matches){
-    if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl='';}
     video.removeAttribute('src');
     video.load();
     loadedMobile=null;
@@ -451,17 +442,10 @@ async function loadScrubVideo(){
   video.poster=POSTER_SRC;
   video.preload='auto';
   loadedMobile=useMobile;
-  // 호스트가 Range 요청을 지원하지 않으면(예: Cloudflare Pages) 브라우저가
-  // 영상을 seek 불가로 처리해 스크럽이 전혀 동작하지 않는다.
-  // blob URL은 항상 seek 가능하므로 blob을 우선 사용하고, 실패 시 직접 src로 대체한다.
-  try{
-    const response=await fetch(VIDEO_SRC);
-    if(!response.ok)throw new Error('HTTP '+response.status);
-    applyVideoSource(URL.createObjectURL(await response.blob()),true);
-  }catch(error){
-    console.warn('blob 로드 실패, 직접 src로 대체:',error);
-    applyVideoSource(VIDEO_SRC,false);
-  }
+  // 15MB를 fetch->blob으로 통째로 받으면 전송이 중단되어 실패함.
+  // src를 직접 지정해 브라우저의 range 요청 스트리밍에 맡긴다.
+  video.src=VIDEO_SRC;
+  video.load();
 }
 
 video.addEventListener('loadeddata',()=>{
@@ -486,7 +470,6 @@ addEventListener('resize',scheduleScrub,{passive:true});
 mobileVideo.addEventListener('change',loadScrubVideo);
 reducedMotion.addEventListener('change',loadScrubVideo);
 function cleanupScrub(){
-  if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl='';}
   if(scrubRaf)cancelAnimationFrame(scrubRaf);
   if(introRaf)cancelAnimationFrame(introRaf);
   if(introDeadline)clearTimeout(introDeadline);
