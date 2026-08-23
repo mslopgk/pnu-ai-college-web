@@ -334,8 +334,9 @@ const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 const mobileVideo=matchMedia('(max-width: 720px), (pointer: coarse)');
 const SCRUB_DURATION=8;
 const SCRUB_HOLD=7;            // 인트로가 멈추는 지점(네트워크 메시 프레임)
-const INTRO_MS=2500;           // 자동재생 길이
-const INTRO_DEADLINE_MS=3500;  // 영상이 늦으면 이 시점에 항목 강제 노출
+const INTRO_RATE=1;            // 자연 속도(1.0x) 재생
+const INDEX_REVEAL_AT=5.2;     // 이 시점(영상 초)부터 인덱스 페이드인
+const INTRO_DEADLINE_MS=3500;  // 영상이 안 뜨면 이 시점에 인덱스 노출
 let scrubRaf=0;
 let targetTime=0;
 let seekPending=false;
@@ -343,8 +344,8 @@ let videoReady=false;
 let loadedMobile=null;
 let objectUrl='';
 let introDone=false;
+let indexShown=false;
 let introRaf=0;
-let introStartedAt=0;
 let introDeadline=0;
 
 function scrubProgress(){
@@ -358,11 +359,17 @@ function videoDuration(){
 }
 
 function updateHeroLayers(){
-  const reveal=introDone?1:0;
-  dim.style.opacity=introDone?'.25':'0';
+  const reveal=indexShown?1:0;
+  dim.style.opacity=indexShown?'.25':'0';
   index.style.opacity=String(reveal);
   index.style.transform=`translateY(${(1-reveal)*28}px)`;
-  index.classList.toggle('ready',introDone);
+  index.classList.toggle('ready',indexShown);
+}
+
+function showIndexOverlay(){
+  if(indexShown)return;
+  indexShown=true;
+  updateHeroLayers();
 }
 
 function scrubTime(){
@@ -391,31 +398,33 @@ function endIntro(){
   introDone=true;
   if(introRaf){cancelAnimationFrame(introRaf);introRaf=0;}
   if(introDeadline){clearTimeout(introDeadline);introDeadline=0;}
-  updateHeroLayers();
+  try{video.pause();}catch(err){}
+  if(videoReady){
+    const to=Math.min(SCRUB_HOLD,videoDuration());
+    if(Math.abs(video.currentTime-to)>.05)video.currentTime=to;
+  }
+  showIndexOverlay();
   scheduleScrub();
 }
 
-function stepIntro(now){
+function watchIntro(){
   introRaf=0;
   if(introDone)return;
-  const t=Math.min(1,(now-introStartedAt)/INTRO_MS),eased=1-Math.pow(1-t,3);
   const to=Math.min(SCRUB_HOLD,videoDuration());
-  if(videoReady&&!video.seeking){
-    const want=eased*to;
-    if(Math.abs(video.currentTime-want)>.012)video.currentTime=want;
-  }
-  if(t>=1){endIntro();return;}
-  introRaf=requestAnimationFrame(stepIntro);
+  if(video.currentTime>=Math.min(INDEX_REVEAL_AT,to-.3))showIndexOverlay();
+  if(video.ended||video.currentTime>=to-.03){endIntro();return;}
+  introRaf=requestAnimationFrame(watchIntro);
 }
 
 function startIntro(){
   if(introDone||introRaf)return;
-  if(reducedMotion.matches){
-    if(videoReady)video.currentTime=Math.min(SCRUB_HOLD,videoDuration());
-    endIntro();return;
-  }
-  introStartedAt=performance.now();
-  introRaf=requestAnimationFrame(stepIntro);
+  if(reducedMotion.matches){endIntro();return;}
+  // rAF로 currentTime을 밀어넣으면 seek이 연속돼 끊긴다. 네이티브 재생을 쓴다.
+  try{video.currentTime=0;}catch(err){}
+  video.playbackRate=INTRO_RATE;
+  const played=video.play();
+  if(played&&played.catch)played.catch(()=>endIntro());  // 자동재생 차단 시 즉시 종료
+  introRaf=requestAnimationFrame(watchIntro);
 }
 
 function revealVideo(){
@@ -498,7 +507,7 @@ function cleanupScrub(){
 addEventListener('pagehide',event=>{ if(!event.persisted) cleanupScrub(); });
 loadScrubVideo();
 scheduleScrub();
-introDeadline=setTimeout(endIntro,INTRO_DEADLINE_MS);
+introDeadline=setTimeout(()=>{ if(!videoReady) endIntro(); },INTRO_DEADLINE_MS);
 
 let lastScrollY=window.scrollY;
 function toggleNavigationOnScroll(){
