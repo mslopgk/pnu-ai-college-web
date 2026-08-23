@@ -858,3 +858,10 @@ body.programs-mode .subnav-menu { background:rgba(8,25,38,.86); border-color:rgb
   .final-admission-cta { grid-template-columns:1fr; }
   .final-admission-cta a { grid-column:1; grid-row:auto; margin-top:10px; text-align:center; }
 }
+
+/* 모바일 짧은 화면에서 인덱스 메뉴·푸터가 sticky 스테이지 overflow:hidden에 잘려
+   접근 불가하던 문제: 오버레이 자체를 스크롤 가능하게 함 */
+@media (max-width:800px) {
+  .index-overlay { overflow-y:auto; overscroll-behavior:contain; justify-content:flex-start; }
+  .index-overlay .footer { margin-top:auto; padding-top:20px; }
+}

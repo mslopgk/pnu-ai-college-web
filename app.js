@@ -445,7 +445,7 @@ function cleanupScrub(){
   mobileVideo.removeEventListener('change',loadScrubVideo);
   reducedMotion.removeEventListener('change',loadScrubVideo);
 }
-addEventListener('pagehide',cleanupScrub,{once:true});
+addEventListener('pagehide',event=>{ if(!event.persisted) cleanupScrub(); });
 loadScrubVideo();
 scheduleScrub();
 
