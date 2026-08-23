@@ -340,8 +340,6 @@ let scrubRaf=0;
 let targetTime=0;
 let seekPending=false;
 let videoReady=false;
-let objectUrl='';
-let videoAborter=null;
 let loadedMobile=null;
 let introDone=false;
 let introRaf=0;
@@ -424,13 +422,12 @@ function revealVideo(){
   poster.classList.add('is-hidden');
 }
 
-async function loadScrubVideo(){
+function loadScrubVideo(){
+  const VIDEO_SRC='./assets/higgsfield-pnu-particles.mp4';
+  const POSTER_SRC='./assets/higgsfield-pnu-poster.webp';
   if(reducedMotion.matches){
-    videoAborter?.abort();
     video.removeAttribute('src');
     video.load();
-    if(objectUrl)URL.revokeObjectURL(objectUrl);
-    objectUrl='';
     loadedMobile=null;
     videoReady=false;
     video.classList.remove('is-ready');
@@ -438,27 +435,17 @@ async function loadScrubVideo(){
     return;
   }
   const useMobile=mobileVideo.matches;
-  if(loadedMobile===useMobile&&objectUrl)return;
-  videoAborter?.abort();
-  videoAborter=new AbortController();
+  if(loadedMobile===useMobile&&video.getAttribute('src'))return;
   videoReady=false;
   video.classList.remove('is-ready');
   poster.classList.remove('is-hidden');
-  const src='./assets/higgsfield-pnu-particles.mp4';
-  const posterSrc='./assets/higgsfield-pnu-poster.webp';
-  video.poster=posterSrc;
-  try{
-    const response=await fetch(src,{signal:videoAborter.signal});
-    if(!response.ok)throw new Error(`Video fetch failed: ${response.status}`);
-    const blob=await response.blob();
-    if(objectUrl)URL.revokeObjectURL(objectUrl);
-    objectUrl=URL.createObjectURL(blob);
-    loadedMobile=useMobile;
-    video.src=objectUrl;
-    video.load();
-  }catch(error){
-    if(error.name!=='AbortError')console.error(error);
-  }
+  video.poster=POSTER_SRC;
+  video.preload='auto';
+  loadedMobile=useMobile;
+  // 15MB를 fetch->blob으로 통째로 받으면 전송이 중단되어 실패함.
+  // src를 직접 지정해 브라우저의 range 요청 스트리밍에 맡긴다.
+  video.src=VIDEO_SRC;
+  video.load();
 }
 
 video.addEventListener('loadeddata',()=>{
@@ -483,9 +470,7 @@ addEventListener('resize',scheduleScrub,{passive:true});
 mobileVideo.addEventListener('change',loadScrubVideo);
 reducedMotion.addEventListener('change',loadScrubVideo);
 function cleanupScrub(){
-  videoAborter?.abort();
   if(scrubRaf)cancelAnimationFrame(scrubRaf);
-  if(objectUrl)URL.revokeObjectURL(objectUrl);
   if(introRaf)cancelAnimationFrame(introRaf);
   if(introDeadline)clearTimeout(introDeadline);
   removeEventListener('scroll',onScrubScroll);
