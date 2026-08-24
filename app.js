@@ -9,12 +9,14 @@ const sections = [
 // 부산대 공식 학과·기관 홈페이지 (검색으로 확인된 주소만 등록)
 const DEPARTMENT_LINKS={
   '정보컴퓨터공학부':'https://cse.pusan.ac.kr/',
-  'AI컴퓨터공학부 (인터랙티브컴퓨팅전공)':'https://inter.pusan.ac.kr/',
+  'AI컴퓨터공학부 (인터랙티브컴퓨팅전공)':'https://cse.pusan.ac.kr/',
   '산업공학부':'https://ie.pusan.ac.kr/',
+  '데이터사이언스학부':'https://data.pusan.ac.kr/',
   '통계학과':'https://stat.pusan.ac.kr/'
 };
 const ORG_NODE_LINKS={
   'unit-a':'https://cse.pusan.ac.kr/',
+  'unit-d':'https://data.pusan.ac.kr/',
   'unit-p':'https://ie.pusan.ac.kr/',
   'edu':'https://swedu.pusan.ac.kr/',
   'infra':'https://uitc.pusan.ac.kr/'
