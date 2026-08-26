@@ -325,7 +325,7 @@ body.college-intro-mode .subnav-menu button:hover { background:rgba(103,184,242,
 .point-date { position:absolute; left:50%; top:20px; color:#75bdf4; font-size:11px; font-weight:700; letter-spacing:.16em; white-space:nowrap; transform:translateX(-50%); opacity:calc(.5 + .5 * var(--reveal)); }
 .particle-date { position:absolute; inset:0; filter:drop-shadow(0 0 calc(4px + 9px * var(--proximity)) rgba(30,160,255,.46)); }
 .particle-fallback { position:absolute; inset:0; display:grid; place-items:center; color:#4eb7ff; font-size:54px; font-weight:700; letter-spacing:.08em; }
-.date-particle { position:absolute; width:1.6px; height:1.6px; margin:-.8px 0 0 -.8px; border-radius:50%; background:#78ccff; box-shadow:0 0 3px rgba(50,174,255,.7); opacity:.76; transition:translate .2s cubic-bezier(.2,.8,.2,1),scale .2s,opacity .2s; animation:particleTwinkle 2.7s var(--delay) ease-in-out infinite alternate; will-change:translate,scale; }
+.date-particle { position:absolute; width:1.6px; height:1.6px; margin:-.8px 0 0 -.8px; border-radius:50%; background:#78ccff; box-shadow:0 0 3px rgba(50,174,255,.7); opacity:.76; transition:translate .2s cubic-bezier(.2,.8,.2,1),scale .2s,opacity .2s;  will-change:translate,scale; }
 .point-note { position:absolute; left:50%; top:172px; width:310px; color:#7891a8; font-size:13px; text-align:center; white-space:nowrap; opacity:clamp(0,calc(var(--proximity) - .12),1); transform:translate(-50%,8px); transition:opacity .22s,transform .3s; }
 .launch-point:hover .point-note,.launch-point:focus-visible .point-note { transform:translate(-50%,0); }
 .launch-copy { position:absolute; left:50%; top:58px; width:min(430px,72vw); text-align:center; opacity:clamp(0,calc(var(--reveal) + var(--proximity) - .45),1); transform:translate(-50%,10px); transition:opacity .22s,transform .32s; pointer-events:none; }
@@ -333,7 +333,9 @@ body.college-intro-mode .subnav-menu button:hover { background:rgba(103,184,242,
 .launch-copy strong { display:block; font-size:clamp(28px,3.2vw,50px); line-height:1.16; letter-spacing:-.055em; }
 .launch-copy p { margin:14px 0 0; color:rgba(220,235,250,.68); font-size:clamp(15px,1.4vw,20px); }
 @keyframes pointDrift { from { margin:-1px 0 0 -2px; } to { margin:2px 0 0 2px; } }
-@keyframes particleTwinkle { from { filter:brightness(.82); } to { filter:brightness(1.28); } }
+/* 점이 1000개가 넘어 전부 반짝이면 매 프레임 전체 스타일 재계산이 발생한다. 일부만 반짝인다. */
+.date-particle:nth-child(6n+1) { animation:particleTwinkle 2.7s var(--delay) ease-in-out infinite alternate; }
+@keyframes particleTwinkle { from { opacity:.62; } to { opacity:.97; } }
 .chapter-scroll { position:absolute; left:var(--gutter); bottom:30px; margin:0; color:rgba(255,255,255,.4); font-size:10px; letter-spacing:.18em; writing-mode:vertical-rl; }
 .keyword-field { position:absolute; }
 .keyword-connections { position:absolute; inset:0; width:100%; height:100%; overflow:visible; opacity:var(--lines,0); transition:opacity .18s; }
