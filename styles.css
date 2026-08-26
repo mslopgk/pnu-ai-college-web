@@ -419,7 +419,7 @@ body.org-mode .detail-nav { color:#eef5fb; border-color:rgba(255,255,255,.1); ba
 body.org-mode .subnav-button::after { color:#8ba5bb; }
 body.org-mode .subnav-menu { border-color:rgba(255,255,255,.12); color:#edf5fb; background:rgba(5,18,29,.72); box-shadow:0 18px 46px rgba(0,0,0,.34); }
 body.org-mode .subnav-menu button:hover { background:rgba(103,184,242,.12); }
-.org-continuum { position:relative; min-height:1200svh; color:#f4f7fa; background:#020a12; }
+.org-continuum { position:relative; min-height:1000svh; color:#f4f7fa; background:#020a12; }
 .org-graph-sticky { position:sticky; z-index:2; top:52px; height:calc(100svh - 52px); min-height:600px; overflow:hidden; isolation:isolate; background:radial-gradient(circle at 50% 62%,rgba(0,91,164,.15),transparent 38%),#020a12; }
 .org-graph-sticky::before { content:""; position:absolute; z-index:-1; inset:0; opacity:.13; background-image:radial-gradient(circle,rgba(74,164,234,.55) 0 1px,transparent 1.4px); background-size:113px 97px; }
 .org-steps { position:relative; z-index:1; margin-top:calc(-100svh + 52px); pointer-events:none; }
