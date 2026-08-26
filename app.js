@@ -219,9 +219,9 @@ function initCollegeIntroduction(initialChapter=0){
     root.querySelector('.fact-connections').style.setProperty('--draw',clamp((factP-.5)/.3));
     root.querySelectorAll('.counter').forEach(counter=>{const targetValue=Number(counter.dataset.target);counter.textContent=Math.round(targetValue*clamp((factP-.08)/.6)).toLocaleString();});
     const futureP=values[3];
-    root.querySelectorAll('[data-scale]').forEach((label,i)=>{const start=.05+i*.14;const enter=clamp((futureP-start)/.12);const leave=1-clamp((futureP-(i<2?start+.16:.48))/.1);label.style.setProperty('--show',enter*leave);});
-    root.querySelector('.roadmap').style.setProperty('--show',clamp((futureP-.5)/.18));
-    root.querySelector('.roadmap').style.setProperty('--line',clamp((futureP-.5)/.32));
+    root.querySelectorAll('[data-scale]').forEach((label,i)=>{const start=.04+i*.15;const enter=clamp((futureP-start)/.07);const leave=1-clamp((futureP-(start+.15))/.06);label.style.setProperty('--show',enter*leave);});
+    root.querySelector('.roadmap').style.setProperty('--show',clamp((futureP-.56)/.16));
+    root.querySelector('.roadmap').style.setProperty('--line',clamp((futureP-.56)/.3));
   };
   const schedule=()=>{if(!raf)raf=requestAnimationFrame(draw);};
   function buildParticleDate(){
