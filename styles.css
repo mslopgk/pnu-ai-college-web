@@ -306,8 +306,8 @@ body.college-intro-mode .subnav-menu button:hover { background:rgba(103,184,242,
 .chapter-nav .chapter-home { padding-left:0; color:#fff; font-size:13px; font-weight:800; letter-spacing:.06em; }
 .chapter-nav > div { display:flex; gap:clamp(6px,1.8vw,28px); }
 .chapter-nav [data-chapter].active,.chapter-nav [data-chapter]:hover { color:#fff; }
-.intro-chapter { position:relative; height:230svh; background:#02070d; }
-.intro-chapter.beginning { height:190svh; }
+.intro-chapter { position:relative; height:330svh; background:#02070d; }
+.intro-chapter.beginning { height:260svh; }
 .intro-chapter.future { height:340svh; }
 .chapter-stage { position:sticky; top:52px; height:calc(100svh - 52px); min-height:560px; overflow:hidden; display:grid; place-items:center; isolation:isolate; background:radial-gradient(circle at 58% 46%,rgba(0,79,150,.18),transparent 31%),linear-gradient(145deg,#010407,#03101a 65%,#02070d); }
 .chapter-stage::after { content:""; position:absolute; z-index:-1; inset:-20%; pointer-events:none; background-image:radial-gradient(circle,rgba(72,162,255,.48) 0 1px,transparent 1.5px); background-size:91px 91px; opacity:.12; transform:rotate(-8deg); }
