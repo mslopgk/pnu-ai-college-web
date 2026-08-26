@@ -1,6 +1,6 @@
 const sections = [
   { title:'AI대학 소개', summary:'출범과 비전 / 우수성·혁신성 / 미래와 지역 확산', subs:['AI대학 출범','비전과 전략목표 — PNU-APEX','AI대학의 우수성·혁신성','AI대학의 미래와 지역 확산'] },
-  { title:'AI대학 조직체계', summary:'ADP+X 교육체계 / 학부 및 전공 / 융합·연계전공', subs:['ADP+X 교육체계','AI대학 학부 및 전공','AX 융합·연계전공','교육·연구·산업 조직의 연계체계','학부–대학원 연계체계'] },
+  { title:'AI대학 조직체계', summary:'ADP+X 교육체계 / 학부 및 전공 / 융합·융합전공', subs:['ADP+X 교육체계','AI대학 학부 및 전공','AX 융합·융합전공','교육·연구·산업 조직의 연계체계','학부–대학원 연계체계'] },
   { title:'신입생모집', summary:'입학 안내 / 모집단위 / 교육경험 / 성장경로', subs:['입학안내','모집단위','교육경험','성장경로'] },
   { title:'AI대학 특화 프로그램', summary:'학습 / 실전 프로젝트 / 연구 / 창업', subs:['성장경로','실전프로젝트','연구성장','창업'] },
   { title:'함께하는 교수진들', summary:'여러 학문분야의 전문성이 하나의 AI대학에서 만납니다', subs:['교수진 탐색'] }
@@ -8,7 +8,7 @@ const sections = [
 
 // 부산대 공식 학과·기관 홈페이지 (검색으로 확인된 주소만 등록)
 const DEPARTMENT_LINKS={
-  '정보컴퓨터공학부':'https://cse.pusan.ac.kr/',
+  'AI컴퓨터공학부 (컴퓨터공학·인공지능전공)':'https://cse.pusan.ac.kr/',
   'AI컴퓨터공학부 (인터랙티브컴퓨팅전공)':'https://inter.pusan.ac.kr/',
   '산업공학부':'https://ie.pusan.ac.kr/',
   '데이터사이언스학부':'https://data.pusan.ac.kr/',
@@ -247,14 +247,14 @@ function initOrgAnimations(){
 }
 
 function renderOrganizationDetail(){
-  const axMajors=['조선해양','미래모빌리티','우주항공','방산','차세대원자력','스마트제조','항만물류','바이오헬스','금융핀테크','에너지','스마트시티','기후환경','의료','교육','공공정책','문화콘텐츠','법·윤리'];
+  const axMajors=['AI융합계산과학','AI·수리데이터과학','해운물류AX','해양금융AX','해양도시기후환경AX','스마트시티','모빌리티·해양AX 감각인지','AI 반도체 소자·공정','산업인공지능','지능형로봇AI','AI·바이오·데이터사이언스','AX신약','애그테크 AX','라이프케어산업 AX','AX휴먼내러티브','AX·소셜데이터분석','AX 전략경영'];
   const nodes=[
     ['ai','AI대학','CENTRAL HUB'],['split','',''],['a','A','AI'],['d','D','DATA'],['p','P','PROCESS'],['x','X','AX'],
     ['unit-a','AI컴퓨터공학부','214명','AI 모델·알고리즘·시스템 및 AI 서비스 구현','컴퓨터공학 · 인공지능 · 인터랙티브컴퓨팅 · AI컴퓨팅자율전공'],
     ['unit-d','데이터사이언스학부·통계학과','114명','데이터 수집·처리·분석과 통계적 추론','신뢰성 검증 · 불확실성 정량화 · 통계학과 공동'],
     ['unit-p','산업공학부','69명','산업·사회 문제 구조화와 프로세스 최적화','산업공학전공 · 산업AI전공'],
-    ['unit-x','AX융합학부','17개 연계전공','ADP 공통역량을 산업·사회 현장에 적용','도메인별 AI 전환 교육 · 산학 프로젝트'],
-    ...axMajors.map((name,i)=>[`ax-${i+1}`,name,'AX CONVERGENCE PROGRAM']),
+    ['unit-x','AX융합학부','17개 융합전공','ADP 공통역량을 산업·사회 현장에 적용','도메인별 AI 전환 교육 · 산학 프로젝트'],
+    ...axMajors.map((name,i)=>[`ax-${i+1}`,name,'AX CONVERGENCE MAJOR']),
     ['edu','AI융합교육원','AI보편교육·확산'],['research','장영실AI융합연구원','전략산업 AX지원'],['infra','AX정보화혁신본부','운영·인프라 지원'],['industry','산학·산업 파트너','INDUSTRY'],
     ['rail-undergrad','학부 연구','UNDERGRADUATE','AI 기초·전공 역량|AX 캡스톤|URP 연구 탐색','PNU AX 1000'],
     ['rail-research','연구 참여','RESEARCH','연구실 매칭|학기·방학 연구 수행|연구성과 발표|우수과제 연구 심화','URP · RESEARCH LAB'],
@@ -263,10 +263,10 @@ function renderOrganizationDetail(){
   ];
   const edges=[['ai','split','stem'],['split','a','core'],['split','d','core'],['split','p','core'],['split','x','core'],['a','unit-a','unit'],['d','unit-d','unit'],['p','unit-p','unit'],['x','unit-x','unit'],...axMajors.map((_,i)=>['unit-x',`ax-${i+1}`,'ax']),['edu','research','ecos-link'],['research','infra','ecos-link'],['rail-undergrad','rail-research','rail'],['rail-research','rail-graduate','rail'],['rail-graduate','rail-advanced','rail']];
   const headings=[
-    ['01 · FOUNDATION','하나의 중심에서,<br>네 개의 축으로.'],['02 · ADP+X','학문을 연결해,<br>실제 조직으로.'],['03 · AX CONVERGENCE','17개 AX 융합·연계전공'],['04 · PNU-APEX','배우고, 연구하고,<br>실행합니다.'],['05 · GROWTH RAIL','학부에서 정예연구까지,<br>하나의 성장 레일로.']
+    ['01 · FOUNDATION','하나의 중심에서,<br>네 개의 축으로.'],['02 · ADP+X','학문을 연결해,<br>실제 조직으로.'],['03 · AX CONVERGENCE','17개 AX 융합전공'],['04 · PNU-APEX','배우고, 연구하고,<br>실행합니다.'],['05 · GROWTH RAIL','학부에서 정예연구까지,<br>하나의 성장 레일로.']
   ];
   const chapterSteps=[0,1,3,4];
-  const renderNode=node=>`<button class="org-node${ORG_NODE_LINKS[node[0]]?' has-home':''}" type="button" data-node="${node[0]}" aria-label="${node[1]}"${ORG_NODE_LINKS[node[0]]?` data-home-url="${ORG_NODE_LINKS[node[0]]}"`:''}><small>${node[2]}</small><strong>${node[1]}</strong>${node[0].startsWith('ax-')?`<span class="ax-node-detail"><b>${node[1]}</b><em>AX CONVERGENCE PROGRAM</em></span>`:node[3]?node[0].startsWith('rail-')?`<span class="rail-node-detail">${node[3].split('|').map(line=>`<i>${line}</i>`).join('')}<b>${node[4]}</b></span>`:`<span class="org-node-detail"><b>${node[3]}</b><em>${node[4]}</em></span>`:''}</button>`;
+  const renderNode=node=>`<button class="org-node${ORG_NODE_LINKS[node[0]]?' has-home':''}" type="button" data-node="${node[0]}" aria-label="${node[1]}"${ORG_NODE_LINKS[node[0]]?` data-home-url="${ORG_NODE_LINKS[node[0]]}"`:''}><small>${node[2]}</small><strong>${node[1]}</strong>${node[0].startsWith('ax-')?`<span class="ax-node-detail"><b>${node[1]}</b><em>AX CONVERGENCE MAJOR</em></span>`:node[3]?node[0].startsWith('rail-')?`<span class="rail-node-detail">${node[3].split('|').map(line=>`<i>${line}</i>`).join('')}<b>${node[4]}</b></span>`:`<span class="org-node-detail"><b>${node[3]}</b><em>${node[4]}</em></span>`:''}</button>`;
   return `<div class="org-continuum"><nav class="org-progress-nav" aria-label="조직체계 챕터">${[0,1,2,3,4].map(step=>`<button type="button" data-org-go="${step}">${String(step+1).padStart(2,'0')}</button>`).join('')}</nav><div class="org-graph-sticky"><div class="org-headings">${headings.map((item,i)=>`<header data-org-heading="${i}"><p>${item[0]}</p><h1>${item[1]}</h1>${i===2?`<div class="ax-heading-copy"><b>AX융합학부를 중심으로 AI 역량을 다양한 산업·사회 분야와 연결합니다.</b></div>`:''}</header>`).join('')}</div><div class="ecosystem-partners"><p>IT Big-Tech 기업참여형 교육과정 운영</p><div class="partner-logo-grid"><img src="./assets/logo-naver-cloud.png" alt="NAVER Cloud"><img src="./assets/logo-google.png" alt="Google"><img src="./assets/logo-aws.png" alt="AWS"><img src="./assets/logo-lguplus.png" alt="LG U+"><img src="./assets/logo-upstage.png" alt="Upstage"></div></div><div class="growth-supports" aria-label="연속 지원 체계"><article data-support="0"><small>SUPPORT 01</small><b>RESEARCH EXPERIENCE</b><span>연구실 매칭 · AX 캡스톤 · URP</span></article><article data-support="1"><small>SUPPORT 02</small><b>GRADUATE BRIDGE</b><span>대학원 교과 선이수 · 진학브리지 · 공동지도</span></article><article data-support="2"><small>SUPPORT 03</small><b>FAST &amp; ADVANCED TRACK</b><span>학·석·박 6년 패스트트랙 추진 · 정예연구 지원</span></article></div><svg class="org-network-svg" aria-hidden="true"><g>${edges.map((edge,i)=>`<path pathLength="1" data-edge="${i}" data-from="${edge[0]}" data-to="${edge[1]}" data-kind="${edge[2]}"/>`).join('')}</g><path class="growth-rail-track"/><path class="growth-rail-progress"/><circle class="growth-rail-point" r="4"/></svg><div class="org-node-layer">${nodes.map(renderNode).join('')}</div><div class="growth-final"><b>Research Experience → Graduate Study → Advanced Research</b><span>연구 경험이 진학으로, 진학이 정예연구로 이어집니다.</span></div><button class="growth-next" type="button" data-go="3">AI대학 특화 프로그램 자세히 보기 <span>↓</span></button></div><div class="org-steps">${headings.map((_,i)=>`<section id="org-step-${i+1}" data-org-step="${i}" aria-label="조직체계 ${i+1}단계"></section>`).join('')}</div></div>`;
 }
 
