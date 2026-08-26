@@ -8,7 +8,7 @@ const sections = [
 
 // 부산대 공식 학과·기관 홈페이지 (검색으로 확인된 주소만 등록)
 const DEPARTMENT_LINKS={
-  'AI컴퓨터공학부 (컴퓨터공학·인공지능전공)':'https://cse.pusan.ac.kr/',
+  '정보컴퓨터공학부':'https://cse.pusan.ac.kr/',
   'AI컴퓨터공학부 (인터랙티브컴퓨팅전공)':'https://inter.pusan.ac.kr/',
   '산업공학부':'https://ie.pusan.ac.kr/',
   '데이터사이언스학부':'https://data.pusan.ac.kr/',
