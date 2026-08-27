@@ -40,6 +40,39 @@ sections.forEach((section,i)=>{
   const button=document.createElement('button'); button.textContent=section.title; button.dataset.go=i; globalMenu.append(button);
 });
 
+// 부산대 본교 푸터의 'PNU LINK' 와 같은 접이식 링크 모음.
+// 원천은 faculty-data.js 의 lab 필드 하나뿐이므로 목록이 두 곳으로 갈라지지 않는다.
+(function initLabLinks(){
+  const wrap=document.querySelector('#lab-links'),toggle=document.querySelector('#lab-links-toggle');
+  if(!wrap||!toggle||!Array.isArray(window.FACULTY_DATA))return;
+  let panel=null;
+  const order=['정보컴퓨터공학부','AI컴퓨터공학부 (인터랙티브컴퓨팅전공)','산업공학부','데이터사이언스학부','통계학과','AX융합학부'];
+  const groups=new Map();
+  FACULTY_DATA.forEach(person=>{if(!person.lab||!person.lab.url)return;
+    if(!groups.has(person.department))groups.set(person.department,[]);groups.get(person.department).push(person);});
+  if(!groups.size){wrap.remove();return;}
+  const esc=text=>String(text).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const depts=order.filter(dept=>groups.has(dept)).concat([...groups.keys()].filter(dept=>!order.includes(dept)));
+  const total=depts.reduce((sum,dept)=>sum+groups.get(dept).length,0);
+  const build=()=>{if(panel)return;
+    panel=document.createElement('div');panel.id='lab-links-panel';panel.className='lab-links-panel';
+    panel.setAttribute('role','region');panel.setAttribute('aria-label','AI대학 연구실 목록');
+    toggle.setAttribute('aria-controls','lab-links-panel');wrap.prepend(panel);
+    panel.innerHTML=depts.map(dept=>{
+    const items=groups.get(dept).map(person=>
+      `<li><a href="${esc(person.lab.url)}" target="_blank" rel="noopener noreferrer">`
+      +`<b>${esc(person.name)}</b><span>${esc(person.lab.name)}</span></a></li>`).join('');
+    return `<section class="lab-links-group"><h4>${esc(dept)}<em>${groups.get(dept).length}</em></h4><ul>${items}</ul></section>`;
+  }).join('');};
+  toggle.querySelector('.lab-links-label').textContent=`AI대학 연구실 바로가기 (${total})`;
+  // 목록은 첫 열기 때 만든다. 기본 상태에서 노드 260여 개를 더 들고 있으면 스크롤 성능이 떨어진다.
+  const setOpen=open=>{if(open)build();wrap.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));};
+  setOpen(false);
+  toggle.addEventListener('click',event=>{event.stopPropagation();setOpen(!wrap.classList.contains('open'));});
+  document.addEventListener('click',event=>{if(wrap.classList.contains('open')&&!wrap.contains(event.target))setOpen(false);});
+  addEventListener('keydown',event=>{if(event.key==='Escape'&&wrap.classList.contains('open')){setOpen(false);toggle.focus();}});
+})();
+
 const header=document.querySelector('.site-header');
 const menuButton=document.querySelector('.menu-button');
 const detail=document.querySelector('#detail');

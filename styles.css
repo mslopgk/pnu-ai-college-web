@@ -61,6 +61,39 @@ body.detail-mode.nav-hidden .detail-nav { transform:translateY(-110%); }
 .index-item:hover .go-button,.go-button:focus { opacity:1; transform:none; }
 .go-button img { width:24px; height:24px; }
 .footer { width:min(var(--content-max),100%); margin:0 auto; display:flex; justify-content:space-between; gap:30px; color:rgba(255,255,255,.72); font-size:12px; }
+
+/* 부산대 본교 푸터의 'PNU LINK' 형식 — 접이식 연구실 링크 모음 */
+/* 히어로 오버레이는 space-between 이라, margin-top:auto 로 푸터와 한 덩어리로 바닥에 붙인다. */
+.lab-links { position:relative; width:min(var(--content-max),100%); margin:auto auto 12px; }
+.lab-links-toggle { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:11px 16px; border:0; border-top:1px solid rgba(255,255,255,.22); border-bottom:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.06); color:rgba(255,255,255,.9); font-size:13px; font-weight:700; letter-spacing:.01em; transition:background .2s ease,color .2s ease; }
+.lab-links-toggle:hover { background:rgba(255,255,255,.13); color:#fff; }
+.lab-links-toggle:focus-visible { outline:2px solid #8cc6ff; outline-offset:2px; }
+.lab-links-caret { width:8px; height:8px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:translateY(-2px) rotate(45deg); transition:transform .22s ease; }
+.lab-links.open .lab-links-caret { transform:translateY(2px) rotate(-135deg); }
+
+.lab-links-panel { position:absolute; left:0; right:0; bottom:calc(100% + 8px); max-height:min(56vh,440px); overflow-y:auto; overscroll-behavior:contain; padding:22px clamp(16px,2vw,28px); display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:20px clamp(20px,2.6vw,40px); align-content:start; border:1px solid rgba(255,255,255,.16); border-radius:12px; background:rgba(7,24,46,.93); box-shadow:0 18px 48px rgba(0,12,30,.45); text-shadow:none; opacity:0; visibility:hidden; transform:translateY(10px); transition:opacity .22s ease,transform .22s ease,visibility .22s; }
+.lab-links.open .lab-links-panel { opacity:1; visibility:visible; transform:translateY(0); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+
+.lab-links-group h4 { margin:0 0 9px; padding-bottom:7px; display:flex; align-items:baseline; gap:7px; border-bottom:1px solid rgba(255,255,255,.16); color:#9ecbff; font-size:12px; font-weight:800; letter-spacing:.02em; }
+.lab-links-group h4 em { color:rgba(255,255,255,.42); font-size:11px; font-style:normal; font-weight:600; }
+.lab-links-group ul { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:2px; }
+.lab-links-group a { display:flex; align-items:baseline; gap:7px; padding:4px 6px; margin:0 -6px; border-radius:5px; color:rgba(255,255,255,.78); font-size:12px; line-height:1.4; text-decoration:none; transition:background .16s ease,color .16s ease; }
+.lab-links-group a:hover,.lab-links-group a:focus-visible { background:rgba(255,255,255,.1); color:#fff; outline:none; }
+.lab-links-group a b { flex:0 0 auto; font-weight:700; }
+.lab-links-group a span { min-width:0; color:rgba(255,255,255,.55); font-size:11px; overflow-wrap:anywhere; }
+.lab-links-group a:hover span { color:rgba(255,255,255,.8); }
+
+@media (max-width:900px) {
+  .lab-links-panel { max-height:min(52vh,380px); grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+}
+@media (max-width:640px) {
+  .lab-links { margin-bottom:10px; }
+  .lab-links-toggle { padding:10px 12px; font-size:12px; }
+  .lab-links-panel { grid-template-columns:1fr; max-height:min(58vh,360px); padding:16px; gap:16px; }
+  .lab-links-group a { font-size:12px; }
+  .lab-links-group a span { font-size:11px; }
+}
+
 .detail-view { min-height:100vh; padding-top:52px; }
 .detail-nav { position:fixed; z-index:30; top:0; left:0; right:0; height:52px; padding:0 var(--gutter); display:flex; align-items:center; gap:6px; background:rgba(250,250,252,.78); backdrop-filter:blur(20px) saturate(160%); -webkit-backdrop-filter:blur(20px) saturate(160%); color:#1d1d1f; border-bottom:1px solid rgba(0,0,0,.08); box-shadow:none; transition:transform .28s ease; will-change:transform; }
 .detail-nav button { border:0; background:none; color:inherit; font-size:13px; font-weight:600; line-height:1; padding:10px 2px; letter-spacing:-.015em; }
@@ -865,7 +898,8 @@ body.programs-mode .subnav-menu { background:rgba(8,25,38,.86); border-color:rgb
    접근 불가하던 문제: 오버레이 자체를 스크롤 가능하게 함 */
 @media (max-width:800px) {
   .index-overlay { overflow-y:auto; overscroll-behavior:contain; justify-content:flex-start; }
-  .index-overlay .footer { margin-top:auto; padding-top:20px; }
+  .index-overlay .lab-links { margin-top:auto; }
+  .index-overlay .footer { margin-top:0; padding-top:14px; }
 }
 
 /* 학과·기관 공식 홈페이지 링크 */
