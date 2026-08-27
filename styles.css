@@ -65,8 +65,8 @@ body.detail-mode.nav-hidden .detail-nav { transform:translateY(-110%); }
 /* 부산대 본교 푸터의 'PNU LINK' 형식 — 접이식 연구실 링크 모음 */
 /* 히어로 오버레이는 space-between 이라, margin-top:auto 로 푸터와 한 덩어리로 바닥에 붙인다. */
 .lab-links { position:relative; width:min(var(--content-max),100%); margin:auto auto 12px; }
-.lab-links-toggle { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:11px 16px; border:0; border-top:1px solid rgba(255,255,255,.22); border-bottom:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.06); color:rgba(255,255,255,.9); font-size:13px; font-weight:700; letter-spacing:.01em; transition:background .2s ease,color .2s ease; }
-.lab-links-toggle:hover { background:rgba(255,255,255,.13); color:#fff; }
+.lab-links-toggle { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:11px 16px; border:0; border-top:1px solid rgba(255,255,255,.22); border-bottom:1px solid rgba(255,255,255,.22); background:transparent; color:rgba(255,255,255,.9); font-size:13px; font-weight:700; letter-spacing:.01em; transition:color .2s ease,border-color .2s ease; }
+.lab-links-toggle:hover { color:#fff; border-top-color:rgba(255,255,255,.42); border-bottom-color:rgba(255,255,255,.42); }
 .lab-links-toggle:focus-visible { outline:2px solid #8cc6ff; outline-offset:2px; }
 .lab-links-caret { width:8px; height:8px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:translateY(-2px) rotate(45deg); transition:transform .22s ease; }
 .lab-links.open .lab-links-caret { transform:translateY(2px) rotate(-135deg); }
