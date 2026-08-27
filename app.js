@@ -63,7 +63,9 @@ sections.forEach((section,i)=>{
       `<li><a href="${esc(person.lab.url)}" target="_blank" rel="noopener noreferrer">`
       +`<b>${esc(person.name)}</b><span>${esc(person.lab.name)}</span></a></li>`).join('');
     return `<section class="lab-links-group"><h4>${esc(dept)}<em>${groups.get(dept).length}</em></h4><ul>${items}</ul></section>`;
-  }).join('');};
+  }).join('')
+    // 출처와 확인일을 남긴다. 링크가 틀렸을 때 어디서 온 값인지 바로 드러난다.
+    +'<p class="lab-links-note">각 학부·학과 공식 페이지 게재 기준 · 최종 확인 2026-08-27</p>';};
   toggle.querySelector('.lab-links-label').textContent=`AI대학 연구실 바로가기 (${total})`;
   // 목록은 첫 열기 때 만든다. 기본 상태에서 노드 260여 개를 더 들고 있으면 스크롤 성능이 떨어진다.
   const setOpen=open=>{if(open)build();wrap.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));};

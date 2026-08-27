@@ -82,6 +82,7 @@ body.detail-mode.nav-hidden .detail-nav { transform:translateY(-110%); }
 .lab-links-group a b { flex:0 0 auto; font-weight:700; }
 .lab-links-group a span { min-width:0; color:rgba(255,255,255,.55); font-size:11px; overflow-wrap:anywhere; }
 .lab-links-group a:hover span { color:rgba(255,255,255,.8); }
+.lab-links-note { position:sticky; bottom:-22px; grid-column:1/-1; margin:2px -28px -22px; padding:11px 28px; border-top:1px solid rgba(255,255,255,.12); background:rgba(7,24,46,.97); color:rgba(255,255,255,.46); font-size:11px; letter-spacing:.01em; }
 
 @media (max-width:900px) {
   .lab-links-panel { max-height:min(52vh,380px); grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
